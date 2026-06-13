@@ -1,0 +1,9 @@
+# Virtual environment, keys and secrets
+.venv/
+.env
+
+# Models
+models/*.pkl
+
+# Python files
+*.pyc
