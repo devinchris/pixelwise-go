@@ -1,11 +1,16 @@
+# VERSION: python-no-db
+# This version is to benchmark the python FastAPI server 
+# INCLUDING the classification model.
+# 
+# Changes Made:
+# - The SlowAPI Rate Limiter has been removed
+# - This version does NOT include DB writes in /classify
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 import numpy as np
 from app.classifier import classify_batch
 from fastapi import Header, HTTPException, Depends, Request
-from slowapi import Limiter
-from slowapi.util import get_remote_address
-from slowapi.middleware import SlowAPIMiddleware
 from app.models import Prediction, SessionLocal
 import os
 
@@ -17,6 +22,7 @@ class ClassifyResponse(BaseModel):
 	prediction: str
 	confidence: float
 	scores: dict[str, float]
+
 
 app = FastAPI()
 
@@ -37,23 +43,19 @@ def results():
 	for r in rows]}
 
 
-limiter = Limiter(key_func=get_remote_address)
-app.state.limiter = limiter
-app.add_middleware(SlowAPIMiddleware)
-
 def verify_api_key(x_api_key: str = Header(...)):
 	if x_api_key != os.getenv("SECRET_API_KEY"):
 		raise HTTPException(status_code=401, detail="Invalid API key")
 
 @app.post("/classify", response_model=ClassifyResponse, dependencies=[Depends(verify_api_key)])
-@limiter.limit("30/minute")
 def classify(request: Request, req: ClassifyRequest):
 	arr = np.array(req.pixels, dtype=np.uint8)[np.newaxis]
 	result = classify_batch(arr)[0]
-	db = SessionLocal()
-	db.add(Prediction(prediction=result["prediction"], confidence=result["confidence"], model_version="v1"))
-	db.commit()
-	db.close()
+	# REMOVED: DB write for each classify request
+	# db = SessionLocal()
+	# db.add(Prediction(prediction=result["prediction"], confidence=result["confidence"], model_version="v1"))
+	# db.commit()
+	# db.close()
 	return result
 
 
