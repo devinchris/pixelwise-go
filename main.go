@@ -1,13 +1,17 @@
 package main
 
 import (
+	"context"
 	"log"
+	"os"
+	"time"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 // -----------------------------------------------
-//	CONFIG 
+//	CONFIG
 // -----------------------------------------------
 
 type Config struct {
@@ -15,42 +19,130 @@ type Config struct {
 	ModelPath     string // weights.json
 	SecretAPIKey  string
 	ListenAddress string // port, default :8000
+	useDB         string
 }
 
 func loadConfig() Config {
 	get := func(key, fallback string) string {
 		// Check if config isnt empty
-		if v:= os.Getenv(key); v != "" {
+		if v := os.Getenv(key); v != "" {
 			return v
 		}
 		return fallback
 	}
 
 	return Config{
-		DBPassword:   get("DB_PASSWORD", ""),
-		SecretAPIKey: get("SECRET_API_KEY", ""),
-		ModelPath:    get("MODEL_PATH", "models/weights.json"),
-		ListenAddr:   get("LISTEN_ADDR", ":8000"),
+		DBPassword:    get("DB_PASSWORD", ""),
+		SecretAPIKey:  get("SECRET_API_KEY", ""),
+		ModelPath:     get("MODEL_PATH", "models/weights.json"),
+		ListenAddress: get("LISTEN_ADDR", ":8000"),
+		useDB:         get("USE_DB", "false"),
 	}
 }
 
+// -----------------------------------------------
+// Classify Structs
+// -----------------------------------------------
 
-
-
-// Dependencies
+// main.py: ClassifyRequest
 type ClassifyRequest struct {
 	Pixels [][]int
 }
 
-func Health(c fiber.Ctx) error {
-	return c.SendString("Healthy")
+// main.py: ClassifyResponse
+type ClassifyResponse struct {
+	Prediction string
+	Confidence float64
+	Scores     map[string]float64
 }
 
+// -----------------------------------------------
+// Application state
+// -----------------------------------------------
+
+type App struct {
+	pool   *pgxpool.Pool
+	model  *Model
+	apiKey string
+	useDB  string
+}
+
+// -----------------------------------------------
+// Main
+// -----------------------------------------------
 func main() {
 	config := loadConfig()
-	app := fiber.New()
 
-	app.Get("/health", Health)
+	//  -- Database pool --
+	// Data Source name Mirror the SQLAlchemy python side
+	dsn := "postgresql://pixelwise:" + config.DBPassword + "@localhost/pixelwise" +
+		"?pool_max_conns=20&pool_min_conns=2"
 
-	log.Fatal(app.Listen(":3000"))
+	pool, err := pgxpool.New(context.Background(), dsn)
+	if err != nil {
+		log.Fatalf("Database could not be opened: %v", err)
+	}
+
+	// closes the pool at the end of the main function
+	defer pool.Close()
+
+	// Verify DB connectivity
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := pool.Ping(ctx); err != nil {
+		log.Fatalf("DB ping failed: %v", err)
+	}
+
+	// Load model
+	model, err := loadModel(config.ModelPath)
+	if err != nil {
+		log.Fatalf("Cannot load model weights: %v", err)
+	}
+
+	app := &App{
+
+		pool:   pool,
+		model:  model,
+		apiKey: config.SecretAPIKey,
+		useDB:  config.useDB,
+	}
+	f := fiber.New()
+
+	f.Get("/health", app.handleHealth)
+
+	log.Printf("pixelwise-go listening on %s", config.ListenAddress)
+	log.Fatal(f.Listen(config.ListenAddress))
+}
+
+// -----------------------------------------------
+// Handlers
+// -----------------------------------------------
+func (a *App) handleHealth(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"status":        "ok",
+		"model_version": "v1",
+	})
+}
+
+func (a *App) handleClassify(c *fiber.Ctx) error {
+	var request ClassifyRequest
+
+	if err := c.BodyParser(&request); err != nil {
+		return fiber.NewError(fiber.StatusUnprocessableEntity, "Invalid request body")
+	}
+	if len(request.Pixels) != 28 || len(request.Pixels[0]) != 28 {
+		return fiber.NewError(fiber.StatusUnprocessableEntity, "Image must be 28x28")
+	}
+
+	result, err := a.model.Predict(request.Pixels)
+	if err != nil {
+		log.Printf("Prediction failed: %v", err)
+		return fiber.NewError(fiber.StatusInternalServerError, "Prediction failed")
+	}
+
+	if a.useDB == "true" {
+		// TODO: insertPrediction
+	}
+
+	return c.JSON(result)
 }
