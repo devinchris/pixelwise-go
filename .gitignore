@@ -11,3 +11,5 @@ models/weights.json
 
 # Go Binary
 pixelwise-go
+
+.DS_Store
