@@ -6,6 +6,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 sudo apt update
 sudo apt install -y git python3 python3-pip python3-venv curl postgresql nginx
 
+# Create venv if it doesnt exist yet
+if [ ! -d "$SCRIPT_DIR/.venv" ]; then
+    python3 -m venv "$SCRIPT_DIR/.venv"
+fi
+
 
 # Activate venv and install pinned dependencies
 if [ -d "$SCRIPT_DIR/.venv" ] && [ -f "$SCRIPT_DIR/requirements.txt" ]; then
@@ -27,14 +32,37 @@ if [ -f .env ]; then
 	fi
 fi
 
-# Install systemd unit
-if [ -f deploy/pixelwise.service ] && command -v systemctl > /dev/null 2>&1 && id produser > /dev/null 2>&1; then
-	sudo cp deploy/pixelwise.service /etc/systemd/system/pixelwise.service
-	sudo systemctl daemon-reload
-	sudo systemctl enable pixelwise
-	sudo systemctl start pixelwise
-	sudo systemctl status pixelwise --no-pager
+
+
+# Export weights to JSON format for GO
+if [ -f "$SCRIPT_DIR/models/model.pkl" ] && [ -d "$SCRIPT_DIR/.venv" ]; then
+    echo "Exporting model weights to models/weights.json..."
+    (cd "$SCRIPT_DIR" && source .venv/bin/activate && python tools/export_weights.py)
 fi
+
+# Install Go
+if ! command -v go >/dev/null 2>&1; then
+    ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
+    curl -fsSL "https://go.dev/dl/go1.24.4.linux-${ARCH}.tar.gz" \
+        | sudo tar -C /usr/local -xz
+    export PATH=$PATH:/usr/local/go/bin
+    echo 'export PATH=$PATH:/usr/local/go/bin' | sudo tee /etc/profile.d/go.sh
+fi
+
+# Build Go service
+if [ -f "$SCRIPT_DIR/go.mod" ]; then
+    (cd "$SCRIPT_DIR" && /usr/local/go/bin/go build -o pixelwise-go .)
+fi
+
+# Grant benchmark scripts access to start and stop services w/o password
+sudo tee /etc/sudoers.d/pixelwise >/dev/null <<'EOF'
+produser ALL=(root) NOPASSWD: /usr/bin/systemctl stop pixelwise-python
+produser ALL=(root) NOPASSWD: /usr/bin/systemctl stop pixelwise-go
+produser ALL=(root) NOPASSWD: /usr/bin/systemctl start pixelwise-python
+produser ALL=(root) NOPASSWD: /usr/bin/systemctl start pixelwise-go
+EOF
+
+
 
 # Provision the postgresql database
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -54,6 +82,20 @@ fi
 # Initialise the predictions table on every VM via Alchemy
 if [ -f "$SCRIPT_DIR/init_db.py" ] && [ -d "$SCRIPT_DIR/.venv" ]; then
 	(cd "$SCRIPT_DIR" && source .venv/bin/activate && python init_db.py)
+fi
+
+# Install systemd unit
+# After the init_db otherwise a panic may result
+# Register both python and go services 
+# Python enabled (production default), Go disabled
+if command -v systemctl >/dev/null 2>&1 && id produser >/dev/null 2>&1; then
+    sudo cp deploy/pixelwise-python.service /etc/systemd/system/pixelwise-python.service
+    sudo cp deploy/pixelwise-go.service     /etc/systemd/system/pixelwise-go.service
+    sudo systemctl daemon-reload
+    sudo systemctl enable pixelwise-python
+    sudo systemctl disable pixelwise-go
+    sudo systemctl start pixelwise-python
+    sudo systemctl status pixelwise-python --no-pager
 fi
 
 # Install Nginx site and deploy the frontend on prod
