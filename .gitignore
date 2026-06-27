@@ -4,6 +4,10 @@
 
 # Models
 models/*.pkl
+models/weights.json
 
 # Python files
 *.pyc
+
+# Go Binary
+pixelwise-go
