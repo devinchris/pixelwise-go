@@ -12,4 +12,7 @@ models/weights.json
 # Go Binary
 pixelwise-go
 
+# Mac stuff
 .DS_Store
+
+CLAUDE.md
