@@ -4,14 +4,21 @@ to insure the models prediction is the same as the Python version
 """
 
 import json, numpy as np
+import sys
+from pathlib import Path
+
+# Fixes the import of app.classifier
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from app.classifier import classify_batch
+
 
 cases = []
 
 # Edge cases
 cases.append(np.zeros((28, 28), dtype=np.uint8))     # empty image
 cases.append(np.full((28, 28), 255, dtype=np.uint8)) # all white
-cases.append(np.eye(28, dtype=np.uint8) * 255)       # diagonal
+cases.append((np.eye(28) * 255).astype(np.uint8))    # diagonal
 
 # Random cases, seeded for reproducibility
 rng = np.random.default_rng(42)
