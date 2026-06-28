@@ -1,16 +1,7 @@
 #!/usr/bin/env python3
-"""Export the LogisticRegression weights from the PixelWise sklearn pipeline
+"""
+Export the Regression weights from the PixelWise sklearn model
 to a plain JSON file that the Go re-implementation loads at startup.
-
-The Go service never loads the .pkl. It recomputes inference from these
-weights:  binarize -> logits = X·Wᵀ + b -> softmax -> argmax.
-
-Crucially, this script also verifies *on the Python side* that a manual
-softmax(X·Wᵀ + b) reproduces pipeline.predict_proba exactly. That single
-check confirms the model is multinomial (one softmax over 9 logits) rather
-than one-vs-rest (per-class sigmoid, then renormalise). If sklearn's default
-ever changes, this assertion fails here -- loudly, in Python -- instead of
-silently producing wrong probabilities in Go.
 """
 import argparse
 import json

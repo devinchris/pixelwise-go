@@ -15,4 +15,7 @@ pixelwise-go
 # Mac stuff
 .DS_Store
 
+# Testdata
+testdata/
+
 CLAUDE.md
