@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 User=produser
-WorkingDirectory=/opt/pixelwise
-EnvironmentFile=/opt/pixelwise/.env
+WorkingDirectory=/opt/pixelwise-go
+EnvironmentFile=/opt/pixelwise-go/.env
 ExecStart=/opt/pixelwise/pixelwise-go
 Restart=always
 RestartSec=3

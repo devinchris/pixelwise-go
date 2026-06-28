@@ -108,7 +108,7 @@ if [ -f deploy/pixelwise.nginx ] && \
     sudo cp -r frontend/* /var/www/pixelwise/
 
     # Substitute the API key into app.js.
-    KEY=$(grep ^SECRET_API_KEY /opt/pixelwise/.env \
+    KEY=$(grep ^SECRET_API_KEY /opt/pixelwise-go/.env \
         | cut -d= -f2)
     sudo sed -i \
         "s/REPLACE_ME/$KEY/" \
