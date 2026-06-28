@@ -115,6 +115,18 @@ func main() {
 }
 
 // -----------------------------------------------
+// Middleware
+// -----------------------------------------------
+
+// requireAPIKey checks for a valid API Key in request header
+func (a *App) requireAPIKey(c *fiber.Ctx) error {
+	if c.Get("X-Api-Key") != a.apiKey {
+		return fiber.NewError(fiber.StatusUnauthorized, "Invalid API key")
+	}
+	return c.Next()
+}
+
+// -----------------------------------------------
 // Handlers
 // -----------------------------------------------
 func (a *App) handleHealth(c *fiber.Ctx) error {
@@ -145,4 +157,19 @@ func (a *App) handleClassify(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(result)
+}
+
+// -----------------------------------------------
+// Error handler
+// -----------------------------------------------
+func jsonErrorHandler(c *fiber.Ctx, err error) error {
+	code := fiber.StatusInternalServerError
+	message := "Internal Server Error"
+	if e, ok := err.(*fiber.Error); ok {
+		code = e.Code
+		message = e.Message
+	}
+	return c.Status(code).JSON(fiber.Map{
+		"detail": message,
+	})
 }
