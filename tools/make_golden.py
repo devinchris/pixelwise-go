@@ -22,9 +22,9 @@ golden = []
 for px in cases:
     result = classify_batch(px[np.newaxis])[0]
     golden.append({
-        "pixels": px.tolist(),        # [[int]] — identisch zum API-Format
-        "prediction": result["prediction"],
-        "confidence": result["confidence"],
+        "pixels": px.tolist(),              # the input to the model
+        "prediction": result["prediction"], # Output of the python model
+        "confidence": result["confidence"], # Output of the python model
         "scores": result["scores"],
     })
 
