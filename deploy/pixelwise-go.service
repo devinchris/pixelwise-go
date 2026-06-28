@@ -6,7 +6,7 @@ After=network.target
 User=produser
 WorkingDirectory=/opt/pixelwise-go
 EnvironmentFile=/opt/pixelwise-go/.env
-ExecStart=/opt/pixelwise/pixelwise-go
+ExecStart=/opt/pixelwise-go/pixelwise-go
 Restart=always
 RestartSec=3
 

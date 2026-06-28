@@ -8,7 +8,7 @@ After=network.target
 User=produser
 WorkingDirectory=/opt/pixelwise-go
 EnvironmentFile=/opt/pixelwise-go/.env
-ExecStart=/opt/pixelwise/.venv/bin/uvicorn \
+ExecStart=/opt/pixelwise-go/.venv/bin/uvicorn \
 app.main:app --host 0.0.0.0 --port 8000
 Restart=always
 RestartSec=3
