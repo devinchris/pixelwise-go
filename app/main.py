@@ -25,6 +25,7 @@ class ClassifyResponse(BaseModel):
 
 
 app = FastAPI()
+use_db = os.getenv("USE_DB", "false").lower() == "true"
 
 @app.get("/health")
 def health():
@@ -51,11 +52,11 @@ def verify_api_key(x_api_key: str = Header(...)):
 def classify(request: Request, req: ClassifyRequest):
 	arr = np.array(req.pixels, dtype=np.uint8)[np.newaxis]
 	result = classify_batch(arr)[0]
-	# REMOVED: DB write for each classify request
-	# db = SessionLocal()
-	# db.add(Prediction(prediction=result["prediction"], confidence=result["confidence"], model_version="v1"))
-	# db.commit()
-	# db.close()
+	if use_db:
+		db = SessionLocal()
+		db.add(Prediction(prediction=result["prediction"], confidence=result["confidence"], model_version="v1"))
+		db.commit()
+		db.close()
 	return result
 
 
