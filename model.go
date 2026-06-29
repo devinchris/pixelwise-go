@@ -16,9 +16,7 @@ type Model struct {
 	intercept [9]float64
 }
 
-// weightsJSON is the intermediate type for JSON decoding.
-// We decode into slices first (unknown size at compile time),
-// validate dimensions, then copy into the fixed-size Model arrays.
+// weightsJSON is the intermediate type for JSON decoding
 type weightsJSON struct {
 	Classes   []string    `json:"classes"`
 	Coef      [][]float64 `json:"coef"`
@@ -82,7 +80,7 @@ func (m *Model) Predict(pixels [][]int) (*ClassifyResponse, error) {
 		}
 	}
 
-	// Logits = W·x + b  (one dot product per class)
+	// Logits = W*x + b
 	var logits [9]float64
 	for k := 0; k < 9; k++ {
 		s := m.intercept[k]
