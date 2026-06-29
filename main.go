@@ -44,14 +44,14 @@ func loadConfig() Config {
 
 // main.py: ClassifyRequest
 type ClassifyRequest struct {
-	Pixels [][]int
+	Pixels [][]int `json:"pixels"`
 }
 
-// main.py: ClassifyResponse
+// main.py: ClassifyResponse — json tags must be lowercase to match the Python API shape.
 type ClassifyResponse struct {
-	Prediction string
-	Confidence float64
-	Scores     map[string]float64
+	Prediction string             `json:"prediction"`
+	Confidence float64            `json:"confidence"`
+	Scores     map[string]float64 `json:"scores"`
 }
 
 // classifier is the inference interface used by handleClassify.
