@@ -16,7 +16,6 @@ import (
 
 type Config struct {
 	DBPassword    string
-	ModelPath     string // weights.json
 	SecretAPIKey  string
 	ListenAddress string // port, default :8000
 	useDB         string
@@ -34,7 +33,6 @@ func loadConfig() Config {
 	return Config{
 		DBPassword:    get("DB_PASSWORD", ""),
 		SecretAPIKey:  get("SECRET_API_KEY", ""),
-		ModelPath:     get("MODEL_PATH", "models/weights.json"),
 		ListenAddress: get("LISTEN_ADDR", ":8000"),
 		useDB:         get("USE_DB", "false"),
 	}
@@ -98,8 +96,7 @@ func main() {
 		log.Fatalf("DB ping failed: %v", err)
 	}
 
-	// Load model
-	model, err := loadModel(config.ModelPath)
+	model, err := loadModel("models/weights.json")
 	if err != nil {
 		log.Fatalf("Cannot load model weights: %v", err)
 	}
