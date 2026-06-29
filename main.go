@@ -56,13 +56,18 @@ type ClassifyResponse struct {
 	Scores     map[string]float64
 }
 
+// classifier is the inference interface used by handleClassify.
+type classifier interface {
+	Predict(pixels [][]int) (*ClassifyResponse, error)
+}
+
 // -----------------------------------------------
 // Application state
 // -----------------------------------------------
 
 type App struct {
-	pool   *pgxpool.Pool
-	model  *Model
+	db     dbStore    // database abstraction (real: pgxStore, test: mockDB)
+	model  classifier // inference model (real: *Model, test: mockClassifier)
 	apiKey string
 	useDB  string
 }
@@ -100,8 +105,7 @@ func main() {
 	}
 
 	app := &App{
-
-		pool:   pool,
+		db:     &pgxStore{pool: pool},
 		model:  model,
 		apiKey: config.SecretAPIKey,
 		useDB:  config.useDB,
@@ -141,7 +145,7 @@ func (a *App) handleHealth(c *fiber.Ctx) error {
 // mirrors the main.py /results endpoint
 // returns the 20 most recent predictions from the database
 func (a *App) handleResults(c *fiber.Ctx) error {
-	rows, err := queryResults(c.Context(), a.pool)
+	rows, err := a.db.queryResults(c.Context())
 	if err != nil {
 		log.Printf("queryResults failed: %v", err)
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to fetch results")
@@ -168,7 +172,7 @@ func (a *App) handleClassify(c *fiber.Ctx) error {
 	}
 
 	if a.useDB == "true" {
-		if err := insertPrediction(c.Context(), a.pool, result.Prediction, result.Confidence); err != nil {
+		if err := a.db.insertPrediction(c.Context(), result.Prediction, result.Confidence); err != nil {
 			log.Printf("insertPrediction failed: %v", err)
 			return fiber.NewError(fiber.StatusInternalServerError, "Failed to save prediction")
 		}

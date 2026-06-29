@@ -8,6 +8,25 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+// dbStore abstracts the two database operations used by the handlers.
+// The production implementation is pgxStore; tests use mockDB.
+type dbStore interface {
+	queryResults(ctx context.Context) ([]PredictionRow, error)
+	insertPrediction(ctx context.Context, prediction string, confidence float64) error
+}
+
+// pgxStore: real database backend, backed by a pgxpool.Pool.
+// It delegates to the package-level SQL functions below.
+type pgxStore struct{ pool *pgxpool.Pool }
+
+func (s *pgxStore) queryResults(ctx context.Context) ([]PredictionRow, error) {
+	return queryResults(ctx, s.pool)
+}
+
+func (s *pgxStore) insertPrediction(ctx context.Context, prediction string, confidence float64) error {
+	return insertPrediction(ctx, s.pool, prediction, confidence)
+}
+
 // mirrors the Python prediction SQLAlchemy model (app/models.py).
 // json tags must match the field names returned by the /results endpoint.
 type PredictionRow struct {
