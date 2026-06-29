@@ -21,8 +21,7 @@ readonly COMPETING_SERVICE="pixelwise-go"
 readonly CONCURRENCY_LEVELS=(1 8 32 128)
 readonly DURATION="15s"
 readonly RESULTS_DIR="results"
-readonly TIMESTAMP
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+readonly TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 readonly OUTFILE="${RESULTS_DIR}/python_${TIMESTAMP}.txt"
 
 # --- Prerequisites ------------------------------------------------------------
@@ -88,7 +87,7 @@ sudo systemctl stop "${COMPETING_SERVICE}" 2>/dev/null || true
 mkdir -p "${RESULTS_DIR}"
 {
   echo "========================================================"
-  echo " Python benchmark  —  $(date)"
+  echo " Python benchmark  -  $(date)"
   echo "========================================================"
   echo ""
 } >> "${OUTFILE}"

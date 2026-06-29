@@ -21,8 +21,7 @@ readonly COMPETING_SERVICE="pixelwise-python"
 readonly CONCURRENCY_LEVELS=(1 8 32 128)
 readonly DURATION="15s"
 readonly RESULTS_DIR="results"
-readonly TIMESTAMP
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+readonly TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 readonly OUTFILE="${RESULTS_DIR}/go_${TIMESTAMP}.txt"
 
 # --- Prerequisites ------------------------------------------------------------
