@@ -101,14 +101,13 @@ if [ -f "$SCRIPT_DIR/go.mod" ]; then
     )
 fi
 
-# -- install oha (HTTP load tester used by the bench scripts) ----------------------------
+# -- install oha (HTTP load tester used by the bench scripts) ------------------
 if ! command -v oha &>/dev/null; then
     echo "Installing oha..."
-    ARCH=$(uname -m)   # oha release names use the raw arch string
-    OHA_TAG=$(curl -fsSL https://api.github.com/repos/hatoo/oha/releases/latest \
-        | python3 -c "import sys,json; print(json.load(sys.stdin)['tag_name'])")
+    # installs arm64 or amd64 binary depending on the host architecture
+    ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
     curl -fsSL \
-        "https://github.com/hatoo/oha/releases/download/${OHA_TAG}/oha-linux-${ARCH}" \
+        "https://github.com/hatoo/oha/releases/latest/download/oha-linux-${ARCH}" \
         -o /tmp/oha
     sudo install -m 755 /tmp/oha /usr/local/bin/oha
     rm -f /tmp/oha
