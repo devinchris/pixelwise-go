@@ -1,8 +1,6 @@
-# /etc/systemd/system/pixelwise.service
-
 [Unit]
 Description=PixelWise API
-After=network.target
+After=network.target postgresql.service
 
 [Service]
 User=produser

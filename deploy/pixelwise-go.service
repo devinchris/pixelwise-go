@@ -1,6 +1,6 @@
 [Unit]
 Description=PixelWise Go API
-After=network.target
+After=network.target postgresql.service
 
 [Service]
 User=produser
