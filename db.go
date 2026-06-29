@@ -84,8 +84,8 @@ func queryResults(ctx context.Context, pool *pgxpool.Pool) ([]PredictionRow, err
 // The bottleneck here is intentional and will probably be significant
 func insertPrediction(ctx context.Context, pool *pgxpool.Pool, prediction string, confidence float64) error {
 	const query = `
-		INSERT INTO predictions (prediction, confidence, model_version)
-		VALUES ($1, $2, 'v1')`
+		INSERT INTO predictions (prediction, confidence, model_version, created_at)
+		VALUES ($1, $2, 'v1', NOW())`
 
 	_, err := pool.Exec(ctx, query, prediction, confidence)
 	if err != nil {
