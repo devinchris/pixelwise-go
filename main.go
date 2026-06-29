@@ -109,6 +109,8 @@ func main() {
 	f := fiber.New()
 
 	f.Get("/health", app.handleHealth)
+	f.Get("/results", app.handleResults)
+	f.Post("/classify", app.requireAPIKey, app.handleClassify)
 
 	log.Printf("pixelwise-go listening on %s", config.ListenAddress)
 	log.Fatal(f.Listen(config.ListenAddress))
@@ -136,6 +138,19 @@ func (a *App) handleHealth(c *fiber.Ctx) error {
 	})
 }
 
+// mirrors the main.py /results endpoint
+// returns the 20 most recent predictions from the database
+func (a *App) handleResults(c *fiber.Ctx) error {
+	rows, err := queryResults(c.Context(), a.pool)
+	if err != nil {
+		log.Printf("queryResults failed: %v", err)
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to fetch results")
+	}
+	return c.JSON(fiber.Map{"results": rows})
+}
+
+// mirrors the main.py /classify endpoint
+// returns the predicted digit and confidence for the image
 func (a *App) handleClassify(c *fiber.Ctx) error {
 	var request ClassifyRequest
 
@@ -153,7 +168,10 @@ func (a *App) handleClassify(c *fiber.Ctx) error {
 	}
 
 	if a.useDB == "true" {
-		// TODO: insertPrediction
+		if err := insertPrediction(c.Context(), a.pool, result.Prediction, result.Confidence); err != nil {
+			log.Printf("insertPrediction failed: %v", err)
+			return fiber.NewError(fiber.StatusInternalServerError, "Failed to save prediction")
+		}
 	}
 
 	return c.JSON(result)
