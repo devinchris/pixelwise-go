@@ -23,7 +23,7 @@ fi
 # Activate venv and install pinned dependencies
 if [ -d "$SCRIPT_DIR/.venv" ] && [ -f "$SCRIPT_DIR/requirements.txt" ]; then
     source "$SCRIPT_DIR/.venv/bin/activate"
-    pip install -r "$SCRIPT_DIR/requirements.txt"
+    pip install -q -r "$SCRIPT_DIR/requirements.txt"
 fi
 
 # Pull the model
@@ -213,3 +213,5 @@ if [ -f "$SCRIPT_DIR/deploy/systemd/pixelwise-deploy.timer" ] \
     sudo systemctl daemon-reload
     sudo systemctl enable --now pixelwise-deploy.timer
 fi
+
+echo "==== Setup complete. Enjoy! ===="
