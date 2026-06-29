@@ -75,8 +75,11 @@ async function classify() {
 
 async function refresh() {
     const r = await fetch("/api/results");
-    if (!r.ok) return;
     const ul = document.getElementById("history");
+    if (!r.ok) {
+        ul.innerHTML = `<li>Error loading results (${r.status})</li>`;
+        return;
+    }
     ul.innerHTML = "";
     for (const row of (await r.json()).results) {
         const li = document.createElement("li");

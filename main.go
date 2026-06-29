@@ -107,7 +107,9 @@ func main() {
 		apiKey: config.SecretAPIKey,
 		useDB:  config.useDB,
 	}
-	f := fiber.New()
+	log.Printf("USE_DB: %s", config.useDB)
+
+	f := fiber.New(fiber.Config{ErrorHandler: jsonErrorHandler})
 
 	f.Get("/health", app.handleHealth)
 	f.Get("/results", app.handleResults)
