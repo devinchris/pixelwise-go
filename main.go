@@ -76,12 +76,15 @@ type App struct {
 func main() {
 	config := loadConfig()
 
-	//  -- Database pool --
-	// Data Source name Mirror the SQLAlchemy python side
-	dsn := "postgresql://pixelwise:" + config.DBPassword + "@localhost/pixelwise" +
-		"?pool_max_conns=20&pool_min_conns=2"
+	// Build the pool config
+	poolCfg, err := pgxpool.ParseConfig(
+		"postgresql://pixelwise@localhost/pixelwise?pool_max_conns=20&pool_min_conns=2")
+	if err != nil {
+		log.Fatalf("Invalid pool config: %v", err)
+	}
+	poolCfg.ConnConfig.Password = config.DBPassword
 
-	pool, err := pgxpool.New(context.Background(), dsn)
+	pool, err := pgxpool.NewWithConfig(context.Background(), poolCfg)
 	if err != nil {
 		log.Fatalf("Database could not be opened: %v", err)
 	}
