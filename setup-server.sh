@@ -20,13 +20,11 @@ if [ ! -d "$SCRIPT_DIR/.venv" ]; then
     python3 -m venv "$SCRIPT_DIR/.venv"
 fi
 
-
 # Activate venv and install pinned dependencies
 if [ -d "$SCRIPT_DIR/.venv" ] && [ -f "$SCRIPT_DIR/requirements.txt" ]; then
-        source "$SCRIPT_DIR/.venv/bin/activate"
+    source "$SCRIPT_DIR/.venv/bin/activate"
     pip install -r "$SCRIPT_DIR/requirements.txt"
 fi
-
 
 # Pull the model
 if [ -f "$SCRIPT_DIR/.env" ]; then
@@ -70,6 +68,33 @@ export PATH="$PATH:/usr/local/go/bin"
 # Build the Go binary
 if [ -f "$SCRIPT_DIR/go.mod" ]; then
     (cd "$SCRIPT_DIR" && go build -o pixelwise-go .)
+    # Smoke-test: verify the binary is executable and starts without panicking.
+    BINARY="$SCRIPT_DIR/pixelwise-go"
+    if [ ! -x "$BINARY" ]; then
+        echo "ERROR: go build succeeded but binary not found or not executable: $BINARY" >&2
+        exit 1
+    fi
+    echo "Go binary smoke-test..."
+    (
+        cd "$SCRIPT_DIR"
+        # Source .env so the binary has DB_PASSWORD etc. available
+        # skip actual DB writes
+        set -a; source .env; set +a
+        USE_DB=false "$BINARY" &
+        SERVER_PID=$!
+        # probe /health
+        for i in $(seq 1 10); do
+            sleep 0.5
+            if curl -sf -o /dev/null http://127.0.0.1:8000/health; then
+                kill "$SERVER_PID" 2>/dev/null
+                echo "Go binary smoke-test passed."
+                exit 0
+            fi
+        done
+        kill "$SERVER_PID" 2>/dev/null
+        echo "ERROR: Go binary did not respond on /health within 5 s." >&2
+        exit 1
+    )
 fi
 
 # -- install oha (HTTP load tester used by the bench scripts) ----------------------------
@@ -174,10 +199,12 @@ EOF
 fi
 
 # -- Auto-deploy timer (only if deploy units are present) -------------------------
+# User=produser is substituted to CURRENT_USER, same as the main service units.
 if [ -f "$SCRIPT_DIR/deploy/systemd/pixelwise-deploy.timer" ] \
    && command -v systemctl &>/dev/null; then
-    sudo cp "$SCRIPT_DIR/deploy/systemd/pixelwise-deploy.service" \
-        /etc/systemd/system/pixelwise-deploy.service
+    sudo sed "s/User=produser/User=${CURRENT_USER}/" \
+        "$SCRIPT_DIR/deploy/systemd/pixelwise-deploy.service" \
+        | sudo tee /etc/systemd/system/pixelwise-deploy.service >/dev/null
     sudo cp "$SCRIPT_DIR/deploy/systemd/pixelwise-deploy.timer" \
         /etc/systemd/system/pixelwise-deploy.timer
     sudo systemctl daemon-reload
