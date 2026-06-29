@@ -80,6 +80,10 @@ if [ -f "$SCRIPT_DIR/go.mod" ]; then
         # Source .env so the binary has DB_PASSWORD etc. available
         # skip actual DB writes
         set -a; source .env; set +a
+
+        # Fix: port :8000 already listened to
+        sudo systemctl stop pixelwise-python 2>/dev/null || true
+        sudo systemctl stop pixelwise-go     2>/dev/null || true
         USE_DB=false "$BINARY" &
         SERVER_PID=$!
         # probe /health
