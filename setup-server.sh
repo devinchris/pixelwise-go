@@ -56,6 +56,22 @@ if [ -f "$SCRIPT_DIR/$MODEL_PKL" ]; then
     )
 fi
 
+# -- Golden test fixtures -> testdata/golden.json (required by Go tests) --------
+# testdata/ is gitignored, so it is absent on a fresh clone. Generate the
+# ground-truth cases from the sklearn reference so `go test ./...` can run.
+# make_golden.py writes to a relative path and does not create the directory,
+# so it must run from the repo root with testdata/ already present.
+if [ -f "$SCRIPT_DIR/$MODEL_PKL" ]; then
+    echo "Generating golden test cases to testdata/golden.json..."
+    (
+        cd "$SCRIPT_DIR"
+        source .venv/bin/activate
+        mkdir -p testdata
+        touch testdata/golden.json
+        python tools/make_golden.py
+    )
+fi
+
 # -- PostgreSQL: user + database ------------------------------------------------
 if command -v psql &>/dev/null && [ -f "$SCRIPT_DIR/.env" ]; then
     set -a; source "$SCRIPT_DIR/.env"; set +a
