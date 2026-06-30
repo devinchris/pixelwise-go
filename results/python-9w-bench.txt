@@ -1,0 +1,403 @@
+========================================================
+ Python-9w benchmark (desktop)  -  Di 30. Jun 20:32:39 CEST 2026
+========================================================
+
+========================================================
+ Python-9w | concurrency=1 | USE_DB=false
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15001.6434 ms
+  Slowest:	2.0640 ms
+  Fastest:	0.5541 ms
+  Average:	0.6563 ms
+  Requests/sec:	1518.5003
+
+  Total data:	6.39 MiB
+  Size/request:	294 B
+  Size/sec:	435.96 KiB
+
+Response time histogram:
+  0.554 ms [1]     |
+  0.705 ms [20363] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.856 ms [2203]  |■■■
+  1.007 ms [122]   |
+  1.158 ms [55]    |
+  1.309 ms [13]    |
+  1.460 ms [10]    |
+  1.611 ms [5]     |
+  1.762 ms [2]     |
+  1.913 ms [0]     |
+  2.064 ms [5]     |
+
+Response time distribution:
+  10.00% in 0.6011 ms
+  25.00% in 0.6196 ms
+  50.00% in 0.6441 ms
+  75.00% in 0.6706 ms
+  90.00% in 0.7095 ms
+  95.00% in 0.7952 ms
+  99.00% in 0.8486 ms
+  99.90% in 1.2982 ms
+  99.99% in 1.9416 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.1672 ms, 0.1672 ms, 0.1672 ms
+  DNS-lookup:	0.0247 ms, 0.0247 ms, 0.0247 ms
+
+Status code distribution:
+  [200] 22779 responses
+
+Error distribution:
+  [1] aborted due to deadline
+
+========================================================
+ Python-9w | concurrency=8 | USE_DB=false
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15001.6665 ms
+  Slowest:	6.8257 ms
+  Fastest:	0.8869 ms
+  Average:	1.2929 ms
+  Requests/sec:	6173.7807
+
+  Total data:	25.97 MiB
+  Size/request:	294 B
+  Size/sec:	1.73 MiB
+
+Response time histogram:
+  0.887 ms [1]     |
+  1.481 ms [83428] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  2.075 ms [8583]  |■■■
+  2.669 ms [401]   |
+  3.262 ms [171]   |
+  3.856 ms [13]    |
+  4.450 ms [3]     |
+  5.044 ms [2]     |
+  5.638 ms [2]     |
+  6.232 ms [2]     |
+  6.826 ms [3]     |
+
+Response time distribution:
+  10.00% in 1.1357 ms
+  25.00% in 1.1922 ms
+  50.00% in 1.2574 ms
+  75.00% in 1.3271 ms
+  90.00% in 1.4784 ms
+  95.00% in 1.6671 ms
+  99.00% in 1.9637 ms
+  99.90% in 3.0012 ms
+  99.99% in 4.3140 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.1274 ms, 0.0730 ms, 0.2192 ms
+  DNS-lookup:	0.0219 ms, 0.0055 ms, 0.0296 ms
+
+Status code distribution:
+  [200] 92609 responses
+
+Error distribution:
+  [8] aborted due to deadline
+
+========================================================
+ Python-9w | concurrency=32 | USE_DB=false
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15002.5849 ms
+  Slowest:	16.1251 ms
+  Fastest:	0.9599 ms
+  Average:	4.9033 ms
+  Requests/sec:	6522.5427
+
+  Total data:	27.43 MiB
+  Size/request:	294 B
+  Size/sec:	1.83 MiB
+
+Response time histogram:
+   0.960 ms [1]     |
+   2.476 ms [16227] |■■■■■■■■■■■■■■■■■■■■■■■
+   3.993 ms [22203] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+   5.509 ms [20975] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+   7.026 ms [20050] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+   8.543 ms [12077] |■■■■■■■■■■■■■■■■■
+  10.059 ms [4615]  |■■■■■■
+  11.576 ms [1329]  |■
+  13.092 ms [286]   |
+  14.609 ms [51]    |
+  16.125 ms [9]     |
+
+Response time distribution:
+  10.00% in 2.0262 ms
+  25.00% in 2.9385 ms
+  50.00% in 4.7947 ms
+  75.00% in 6.5138 ms
+  90.00% in 7.9719 ms
+  95.00% in 8.8607 ms
+  99.00% in 10.5984 ms
+  99.90% in 12.7084 ms
+  99.99% in 14.5868 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.1738 ms, 0.0589 ms, 0.6152 ms
+  DNS-lookup:	0.0096 ms, 0.0021 ms, 0.0544 ms
+
+Status code distribution:
+  [200] 97823 responses
+
+Error distribution:
+  [32] aborted due to deadline
+
+========================================================
+ Python-9w | concurrency=128 | USE_DB=false
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15002.1404 ms
+  Slowest:	39.5098 ms
+  Fastest:	1.1279 ms
+  Average:	21.7531 ms
+  Requests/sec:	5886.5600
+
+  Total data:	24.72 MiB
+  Size/request:	294 B
+  Size/sec:	1.65 MiB
+
+Response time histogram:
+   1.128 ms [1]     |
+   4.966 ms [12074] |■■■■■■■■■■■■
+   8.804 ms [12]    |
+  12.642 ms [66]    |
+  16.481 ms [674]   |
+  20.319 ms [8198]  |■■■■■■■■
+  24.157 ms [22488] |■■■■■■■■■■■■■■■■■■■■■■■
+  27.995 ms [30710] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  31.833 ms [12620] |■■■■■■■■■■■■■
+  35.672 ms [1280]  |■
+  39.510 ms [60]    |
+
+Response time distribution:
+  10.00% in 2.7100 ms
+  25.00% in 20.5693 ms
+  50.00% in 24.2243 ms
+  75.00% in 26.8939 ms
+  90.00% in 28.8972 ms
+  95.00% in 30.0818 ms
+  99.00% in 32.4239 ms
+  99.90% in 35.0590 ms
+  99.99% in 38.2600 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.3739 ms, 0.1200 ms, 0.7776 ms
+  DNS-lookup:	0.0039 ms, 0.0022 ms, 0.0306 ms
+
+Status code distribution:
+  [200] 88183 responses
+
+Error distribution:
+  [128] aborted due to deadline
+
+========================================================
+ Python-9w | concurrency=1 | USE_DB=true
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15001.7413 ms
+  Slowest:	24.5206 ms
+  Fastest:	2.4411 ms
+  Average:	4.2332 ms
+  Requests/sec:	235.9726
+
+  Total data:	1016.08 KiB
+  Size/request:	294 B
+  Size/sec:	67.73 KiB
+
+Response time histogram:
+   2.441 ms [1]    |
+   4.649 ms [2382] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+   6.857 ms [467]  |■■■■■■
+   9.065 ms [648]  |■■■■■■■■
+  11.273 ms [40]   |
+  13.481 ms [0]    |
+  15.689 ms [0]    |
+  17.897 ms [0]    |
+  20.105 ms [0]    |
+  22.313 ms [0]    |
+  24.521 ms [1]    |
+
+Response time distribution:
+  10.00% in 2.5969 ms
+  25.00% in 2.6531 ms
+  50.00% in 2.7899 ms
+  75.00% in 5.9733 ms
+  90.00% in 8.0812 ms
+  95.00% in 8.4587 ms
+  99.00% in 9.2076 ms
+  99.90% in 10.6896 ms
+  99.99% in 24.5206 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.3121 ms, 0.3121 ms, 0.3121 ms
+  DNS-lookup:	0.0608 ms, 0.0608 ms, 0.0608 ms
+
+Status code distribution:
+  [200] 3539 responses
+
+Error distribution:
+  [1] aborted due to deadline
+
+========================================================
+ Python-9w | concurrency=8 | USE_DB=true
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15001.9996 ms
+  Slowest:	22.7167 ms
+  Fastest:	3.3201 ms
+  Average:	5.7679 ms
+  Requests/sec:	1385.7486
+
+  Total data:	5.83 MiB
+  Size/request:	294 B
+  Size/sec:	397.71 KiB
+
+Response time histogram:
+   3.320 ms [1]     |
+   5.260 ms [7848]  |■■■■■■■■■■■■■■■■■■■■■■■■
+   7.199 ms [10427] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+   9.139 ms [2157]  |■■■■■■
+  11.079 ms [298]   |
+  13.018 ms [36]    |
+  14.958 ms [7]     |
+  16.898 ms [0]     |
+  18.837 ms [0]     |
+  20.777 ms [0]     |
+  22.717 ms [7]     |
+
+Response time distribution:
+  10.00% in 4.2297 ms
+  25.00% in 4.6770 ms
+  50.00% in 5.7359 ms
+  75.00% in 6.4848 ms
+  90.00% in 7.3792 ms
+  95.00% in 8.0081 ms
+  99.00% in 9.6678 ms
+  99.90% in 12.3387 ms
+  99.99% in 22.4526 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.1302 ms, 0.0620 ms, 0.2404 ms
+  DNS-lookup:	0.0241 ms, 0.0042 ms, 0.0372 ms
+
+Status code distribution:
+  [200] 20781 responses
+
+Error distribution:
+  [8] aborted due to deadline
+
+========================================================
+ Python-9w | concurrency=32 | USE_DB=true
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15001.7099 ms
+  Slowest:	43.1760 ms
+  Fastest:	3.9721 ms
+  Average:	9.9897 ms
+  Requests/sec:	3202.7016
+
+  Total data:	13.46 MiB
+  Size/request:	294 B
+  Size/sec:	918.91 KiB
+
+Response time histogram:
+   3.972 ms [1]     |
+   7.893 ms [17932] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  11.813 ms [14746] |■■■■■■■■■■■■■■■■■■■■■■■■■■
+  15.733 ms [12279] |■■■■■■■■■■■■■■■■■■■■■
+  19.654 ms [2749]  |■■■■
+  23.574 ms [265]   |
+  27.494 ms [27]    |
+  31.415 ms [4]     |
+  35.335 ms [2]     |
+  39.256 ms [4]     |
+  43.176 ms [5]     |
+
+Response time distribution:
+  10.00% in 5.7508 ms
+  25.00% in 6.8335 ms
+  50.00% in 9.6429 ms
+  75.00% in 12.6128 ms
+  90.00% in 14.8375 ms
+  95.00% in 16.1749 ms
+  99.00% in 18.8499 ms
+  99.90% in 23.1766 ms
+  99.99% in 40.0899 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.1457 ms, 0.0556 ms, 0.4466 ms
+  DNS-lookup:	0.0102 ms, 0.0019 ms, 0.0825 ms
+
+Status code distribution:
+  [200] 48014 responses
+
+Error distribution:
+  [32] aborted due to deadline
+
+========================================================
+ Python-9w | concurrency=128 | USE_DB=true
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15002.7088 ms
+  Slowest:	134.0687 ms
+  Fastest:	4.6680 ms
+  Average:	49.3092 ms
+  Requests/sec:	2599.4639
+
+  Total data:	10.90 MiB
+  Size/request:	294 B
+  Size/sec:	743.88 KiB
+
+Response time histogram:
+    4.668 ms [1]     |
+   17.608 ms [4643]  |■■■■■■■■■■■
+   30.548 ms [1181]  |■■■
+   43.488 ms [5604]  |■■■■■■■■■■■■■■
+   56.428 ms [12570] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+   69.368 ms [10368] |■■■■■■■■■■■■■■■■■■■■■■■■■■
+   82.308 ms [3575]  |■■■■■■■■■
+   95.248 ms [779]   |■
+  108.189 ms [102]   |
+  121.129 ms [36]    |
+  134.069 ms [12]    |
+
+Response time distribution:
+  10.00% in 11.5550 ms
+  25.00% in 40.4781 ms
+  50.00% in 52.4711 ms
+  75.00% in 61.7249 ms
+  90.00% in 70.7654 ms
+  95.00% in 76.6766 ms
+  99.00% in 88.4920 ms
+  99.90% in 111.8182 ms
+  99.99% in 128.7484 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.3709 ms, 0.1339 ms, 0.7714 ms
+  DNS-lookup:	0.0041 ms, 0.0020 ms, 0.0365 ms
+
+Status code distribution:
+  [200] 38871 responses
+
+Error distribution:
+  [128] aborted due to deadline

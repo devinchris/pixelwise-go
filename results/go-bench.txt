@@ -1,0 +1,403 @@
+========================================================
+ Go benchmark (desktop)  -  Di 30. Jun 20:28:27 CEST 2026
+========================================================
+
+========================================================
+ Go | concurrency=1 | USE_DB=false
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15001336.5000 us
+  Slowest:	757.0450 us
+  Fastest:	84.1720 us
+  Average:	108.4928 us
+  Requests/sec:	9154.4510
+
+  Total data:	38.24 MiB
+  Size/request:	292 B
+  Size/sec:	2.55 MiB
+
+Response time histogram:
+   84.172 us [1]      |
+  151.459 us [128192] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  218.747 us [6880]   |■
+  286.034 us [1503]   |
+  353.321 us [444]    |
+  420.609 us [210]    |
+  487.896 us [64]     |
+  555.183 us [23]     |
+  622.470 us [4]      |
+  689.758 us [4]      |
+  757.045 us [3]      |
+
+Response time distribution:
+  10.00% in 94.5310 us
+  25.00% in 95.6020 us
+  50.00% in 98.5780 us
+  75.00% in 103.4530 us
+  90.00% in 135.1870 us
+  95.00% in 164.5170 us
+  99.00% in 246.5210 us
+  99.90% in 400.1430 us
+  99.99% in 551.0200 us
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	117.8100 us, 117.8100 us, 117.8100 us
+  DNS-lookup:	23.5270 us, 23.5270 us, 23.5270 us
+
+Status code distribution:
+  [200] 137328 responses
+
+Error distribution:
+  [1] aborted due to deadline
+
+========================================================
+ Go | concurrency=8 | USE_DB=false
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15000.7484 ms
+  Slowest:	4.1894 ms
+  Fastest:	0.0929 ms
+  Average:	0.1698 ms
+  Requests/sec:	46836.5966
+
+  Total data:	195.65 MiB
+  Size/request:	292 B
+  Size/sec:	13.04 MiB
+
+Response time histogram:
+  0.093 ms [1]      |
+  0.503 ms [701722] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.912 ms [780]    |
+  1.322 ms [53]     |
+  1.732 ms [12]     |
+  2.141 ms [4]      |
+  2.551 ms [0]      |
+  2.960 ms [0]      |
+  3.370 ms [0]      |
+  3.780 ms [2]      |
+  4.189 ms [2]      |
+
+Response time distribution:
+  10.00% in 0.1102 ms
+  25.00% in 0.1213 ms
+  50.00% in 0.1611 ms
+  75.00% in 0.1771 ms
+  90.00% in 0.2639 ms
+  95.00% in 0.3119 ms
+  99.00% in 0.4104 ms
+  99.90% in 0.5164 ms
+  99.99% in 0.9249 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.1799 ms, 0.0877 ms, 0.2738 ms
+  DNS-lookup:	0.0300 ms, 0.0031 ms, 0.0740 ms
+
+Status code distribution:
+  [200] 702576 responses
+
+Error distribution:
+  [8] aborted due to deadline
+
+========================================================
+ Go | concurrency=32 | USE_DB=false
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15002.0582 ms
+  Slowest:	13.7281 ms
+  Fastest:	0.0954 ms
+  Average:	0.6937 ms
+  Requests/sec:	46050.0146
+
+  Total data:	192.37 MiB
+  Size/request:	292 B
+  Size/sec:	12.82 MiB
+
+Response time histogram:
+   0.095 ms [1]      |
+   1.459 ms [619616] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+   2.822 ms [30439]  |■
+   4.185 ms [28838]  |■
+   5.548 ms [8689]   |
+   6.912 ms [2317]   |
+   8.275 ms [665]    |
+   9.638 ms [187]    |
+  11.002 ms [41]     |
+  12.365 ms [18]     |
+  13.728 ms [6]      |
+
+Response time distribution:
+  10.00% in 0.1844 ms
+  25.00% in 0.2326 ms
+  50.00% in 0.3732 ms
+  75.00% in 0.6149 ms
+  90.00% in 1.5596 ms
+  95.00% in 3.0472 ms
+  99.00% in 4.7269 ms
+  99.90% in 7.2272 ms
+  99.99% in 9.5753 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.1037 ms, 0.0409 ms, 0.2578 ms
+  DNS-lookup:	0.0066 ms, 0.0016 ms, 0.0299 ms
+
+Status code distribution:
+  [200] 690817 responses
+
+Error distribution:
+  [28] aborted due to deadline
+
+========================================================
+ Go | concurrency=128 | USE_DB=false
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15002.0752 ms
+  Slowest:	104.7939 ms
+  Fastest:	0.0964 ms
+  Average:	2.3398 ms
+  Requests/sec:	54656.0384
+
+  Total data:	228.30 MiB
+  Size/request:	292 B
+  Size/sec:	15.22 MiB
+
+Response time histogram:
+    0.096 ms [1]      |
+   10.566 ms [751697] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+   21.036 ms [42855]  |■
+   31.506 ms [20085]  |
+   41.975 ms [4048]   |
+   52.445 ms [875]    |
+   62.915 ms [227]    |
+   73.385 ms [40]     |
+   83.854 ms [9]      |
+   94.324 ms [1]      |
+  104.794 ms [1]      |
+
+Response time distribution:
+  10.00% in 0.1895 ms
+  25.00% in 0.2407 ms
+  50.00% in 0.4568 ms
+  75.00% in 0.9620 ms
+  90.00% in 2.9052 ms
+  95.00% in 18.3899 ms
+  99.00% in 26.6109 ms
+  99.90% in 44.1312 ms
+  99.99% in 60.6045 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.3291 ms, 0.1351 ms, 0.6392 ms
+  DNS-lookup:	0.0035 ms, 0.0016 ms, 0.0345 ms
+
+Status code distribution:
+  [200] 819839 responses
+
+Error distribution:
+  [115] aborted due to deadline
+
+========================================================
+ Go | concurrency=1 | USE_DB=true
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15002.0324 ms
+  Slowest:	7.8272 ms
+  Fastest:	1.3956 ms
+  Average:	2.4388 ms
+  Requests/sec:	409.1446
+
+  Total data:	1.71 MiB
+  Size/request:	292 B
+  Size/sec:	116.65 KiB
+
+Response time histogram:
+  1.396 ms [1]    |
+  2.039 ms [29]   |
+  2.682 ms [5598] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  3.325 ms [446]  |■■
+  3.968 ms [32]   |
+  4.611 ms [3]    |
+  5.255 ms [10]   |
+  5.898 ms [11]   |
+  6.541 ms [0]    |
+  7.184 ms [1]    |
+  7.827 ms [6]    |
+
+Response time distribution:
+  10.00% in 2.2022 ms
+  25.00% in 2.3159 ms
+  50.00% in 2.4070 ms
+  75.00% in 2.5110 ms
+  90.00% in 2.6524 ms
+  95.00% in 2.7558 ms
+  99.00% in 3.3274 ms
+  99.90% in 6.9417 ms
+  99.99% in 7.8272 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.1214 ms, 0.1214 ms, 0.1214 ms
+  DNS-lookup:	0.0246 ms, 0.0246 ms, 0.0246 ms
+
+Status code distribution:
+  [200] 6137 responses
+
+Error distribution:
+  [1] aborted due to deadline
+
+========================================================
+ Go | concurrency=8 | USE_DB=true
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15001.5650 ms
+  Slowest:	62.4510 ms
+  Fastest:	2.2049 ms
+  Average:	4.3573 ms
+  Requests/sec:	1832.0089
+
+  Total data:	7.65 MiB
+  Size/request:	292 B
+  Size/sec:	522.26 KiB
+
+Response time histogram:
+   2.205 ms [1]     |
+   8.230 ms [27384] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  14.254 ms [75]    |
+  20.279 ms [0]     |
+  26.303 ms [0]     |
+  32.328 ms [7]     |
+  38.353 ms [3]     |
+  44.377 ms [4]     |
+  50.402 ms [0]     |
+  56.426 ms [0]     |
+  62.451 ms [1]     |
+
+Response time distribution:
+  10.00% in 3.9436 ms
+  25.00% in 4.0660 ms
+  50.00% in 4.2198 ms
+  75.00% in 4.4089 ms
+  90.00% in 4.6335 ms
+  95.00% in 5.3691 ms
+  99.00% in 6.8751 ms
+  99.90% in 10.4036 ms
+  99.99% in 38.3953 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.1056 ms, 0.0506 ms, 0.1886 ms
+  DNS-lookup:	0.0222 ms, 0.0038 ms, 0.0396 ms
+
+Status code distribution:
+  [200] 27475 responses
+
+Error distribution:
+  [8] aborted due to deadline
+
+========================================================
+ Go | concurrency=32 | USE_DB=true
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15003.4227 ms
+  Slowest:	20.8304 ms
+  Fastest:	2.2276 ms
+  Average:	9.7584 ms
+  Requests/sec:	3276.4524
+
+  Total data:	13.68 MiB
+  Size/request:	292 B
+  Size/sec:	933.69 KiB
+
+Response time histogram:
+   2.228 ms [1]     |
+   4.088 ms [6]     |
+   5.948 ms [433]   |
+   7.808 ms [1995]  |■■
+   9.669 ms [25233] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  11.529 ms [15006] |■■■■■■■■■■■■■■■■■■■
+  13.389 ms [6007]  |■■■■■■■
+  15.250 ms [366]   |
+  17.110 ms [46]    |
+  18.970 ms [27]    |
+  20.830 ms [6]     |
+
+Response time distribution:
+  10.00% in 8.3389 ms
+  25.00% in 8.9278 ms
+  50.00% in 9.5084 ms
+  75.00% in 10.5306 ms
+  90.00% in 11.7601 ms
+  95.00% in 12.2080 ms
+  99.00% in 13.2990 ms
+  99.90% in 15.9503 ms
+  99.99% in 20.1722 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.1097 ms, 0.0393 ms, 0.2953 ms
+  DNS-lookup:	0.0069 ms, 0.0016 ms, 0.0384 ms
+
+Status code distribution:
+  [200] 49126 responses
+
+Error distribution:
+  [32] aborted due to deadline
+
+========================================================
+ Go | concurrency=128 | USE_DB=true
+========================================================
+Summary:
+  Success rate:	100.00%
+  Total:	15004.8906 ms
+  Slowest:	52.3809 ms
+  Fastest:	3.6791 ms
+  Average:	40.9577 ms
+  Requests/sec:	3127.3804
+
+  Total data:	13.03 MiB
+  Size/request:	292 B
+  Size/sec:	889.36 KiB
+
+Response time histogram:
+   3.679 ms [1]     |
+   8.549 ms [16]    |
+  13.419 ms [30]    |
+  18.290 ms [34]    |
+  23.160 ms [23]    |
+  28.030 ms [25]    |
+  32.900 ms [111]   |
+  37.770 ms [2268]  |■■
+  42.641 ms [35080] |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  47.511 ms [8909]  |■■■■■■■■
+  52.381 ms [301]   |
+
+Response time distribution:
+  10.00% in 38.5788 ms
+  25.00% in 39.8083 ms
+  50.00% in 40.8829 ms
+  75.00% in 42.2004 ms
+  90.00% in 43.6200 ms
+  95.00% in 44.4794 ms
+  99.00% in 46.5649 ms
+  99.90% in 50.1271 ms
+  99.99% in 52.0111 ms
+
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.5230 ms, 0.1996 ms, 1.0087 ms
+  DNS-lookup:	0.0053 ms, 0.0018 ms, 0.0295 ms
+
+Status code distribution:
+  [200] 46798 responses
+
+Error distribution:
+  [128] aborted due to deadline
