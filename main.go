@@ -78,7 +78,7 @@ func main() {
 
 	// Build the pool config
 	poolCfg, err := pgxpool.ParseConfig(
-		"postgresql://pixelwise@localhost/pixelwise?pool_max_conns=20&pool_min_conns=2")
+		"postgresql://pixelwise@localhost/pixelwise?pool_max_conns=15&pool_min_conns=2")
 	if err != nil {
 		log.Fatalf("Invalid pool config: %v", err)
 	}
