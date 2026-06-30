@@ -14,7 +14,7 @@ type GoldenCase struct {
 	Scores     map[string]float64 `json:"scores"`
 }
 
-const confidenceTolerance = 1e-6
+const confidenceTolerance = 1e-9
 
 func TestGolden(t *testing.T) {
 	// load model
