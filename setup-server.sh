@@ -56,6 +56,31 @@ if [ -f "$SCRIPT_DIR/$MODEL_PKL" ]; then
     )
 fi
 
+# -- PostgreSQL: user + database ------------------------------------------------
+if command -v psql &>/dev/null && [ -f "$SCRIPT_DIR/.env" ]; then
+    set -a; source "$SCRIPT_DIR/.env"; set +a
+    sudo -u postgres psql -tAc \
+        "SELECT 1 FROM pg_roles WHERE rolname='pixelwise'" \
+        | grep -q 1 || \
+    sudo -u postgres psql -c \
+        "CREATE USER pixelwise WITH PASSWORD '$DB_PASSWORD';"
+    sudo -u postgres psql -tAc \
+        "SELECT 1 FROM pg_database WHERE datname='pixelwise'" \
+        | grep -q 1 || \
+    sudo -u postgres createdb -O pixelwise pixelwise
+fi
+
+# -- DB schema (predictions table) ---------------------------------------------
+# Run before starting the services to avoid a startup panic on a missing table.
+if [ -f "$SCRIPT_DIR/init_db.py" ]; then
+    (
+        cd "$SCRIPT_DIR"
+        source .venv/bin/activate
+        python init_db.py
+    )
+fi
+
+
 # -- Go ------------------------------------------------------------------------
 if ! command -v go &>/dev/null && [ ! -x /usr/local/go/bin/go ]; then
     ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
@@ -116,30 +141,6 @@ fi
 # -- Results directory (written to by bench scripts) -----------------------------
 mkdir -p "$SCRIPT_DIR/results"
 
-# -- PostgreSQL: user + database ------------------------------------------------
-if command -v psql &>/dev/null && [ -f "$SCRIPT_DIR/.env" ]; then
-    set -a; source "$SCRIPT_DIR/.env"; set +a
-    sudo -u postgres psql -tAc \
-        "SELECT 1 FROM pg_roles WHERE rolname='pixelwise'" \
-        | grep -q 1 || \
-    sudo -u postgres psql -c \
-        "CREATE USER pixelwise WITH PASSWORD '$DB_PASSWORD';"
-    sudo -u postgres psql -tAc \
-        "SELECT 1 FROM pg_database WHERE datname='pixelwise'" \
-        | grep -q 1 || \
-    sudo -u postgres createdb -O pixelwise pixelwise
-fi
-
-# -- DB schema (predictions table) ---------------------------------------------
-# Run before starting the services to avoid a startup panic on a missing table.
-if [ -f "$SCRIPT_DIR/init_db.py" ]; then
-    (
-        cd "$SCRIPT_DIR"
-        source .venv/bin/activate
-        python init_db.py
-    )
-fi
-
 # -- Systemd service units ------------------------------------------------------
 # The source files contain User=produser; substitute the actual OS user on install
 # so the service runs as whoever set up the VM.
@@ -155,7 +156,7 @@ if command -v systemctl &>/dev/null; then
     sudo systemctl enable pixelwise-python
     sudo systemctl disable pixelwise-go
     sudo systemctl start pixelwise-python
-    sudo systemctl status pixelwise-python --no-pager
+    sudo systemctl status pixelwise-python --no-pager || true
 fi
 
 # -- Nginx + frontend -----------------------------------------------------------
@@ -199,19 +200,6 @@ ${CURRENT_USER} ALL=(root) NOPASSWD: /usr/bin/rm -f /etc/systemd/system/pixelwis
 EOF
     sudo chmod 0440 /etc/sudoers.d/pixelwise
     sudo visudo -cf /etc/sudoers.d/pixelwise
-fi
-
-# -- Auto-deploy timer (only if deploy units are present) -------------------------
-# User=produser is substituted to CURRENT_USER, same as the main service units.
-if [ -f "$SCRIPT_DIR/deploy/systemd/pixelwise-deploy.timer" ] \
-   && command -v systemctl &>/dev/null; then
-    sudo sed "s/User=produser/User=${CURRENT_USER}/" \
-        "$SCRIPT_DIR/deploy/systemd/pixelwise-deploy.service" \
-        | sudo tee /etc/systemd/system/pixelwise-deploy.service >/dev/null
-    sudo cp "$SCRIPT_DIR/deploy/systemd/pixelwise-deploy.timer" \
-        /etc/systemd/system/pixelwise-deploy.timer
-    sudo systemctl daemon-reload
-    sudo systemctl enable --now pixelwise-deploy.timer
 fi
 
 echo "==== Setup complete. Enjoy! ===="
